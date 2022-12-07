@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+from mysql import connector
 
 
 data_dir = "data/"
@@ -36,8 +37,56 @@ def DataLib():
     return patterns, responses
 
 
-if __name__ == "__main__":
-    p , r = DataLib()
-    print(p,"\n\n")
+
+def db_con():
+    mydb = connector.connect(
+            host="localhost",
+            user="sam",
+            password='Samrat@999',
+            database="maya_dataset"
+            )
     
+    cursor = mydb.cursor()
+    return mydb,cursor
+
+
+def get_dataset():
+    mydb, cursor = db_con()
+    
+    patterns = pd.DataFrame(columns = ['pattern', 'tag'])
+    responses = pd.DataFrame(columns = ['response', 'tag'])
+    
+    cursor.execute("show tables")
+    results = cursor.fetchall()
+    tables = [result[0] for result in results]
+    
+    for table in tables:
+        query = f"select pattern, tag from {table}"
+        pattern = pd.read_sql(query, mydb)
+        patterns = patterns.append(pattern, ignore_index = True)
+        
+    
+        query = f"select response, tag from {table}"
+        response = pd.read_sql(query, mydb)
+        responses = responses.append(response, ignore_index = True)
+    
+    
+    # Droping null values
+        patterns.dropna(inplace = True) 
+        responses.dropna(inplace = True)
+        
+    return patterns, responses
+
+
+        
+        
+    
+
+
+
+if __name__ == "__main__":
+    p , r = get_dataset()
+    print(p,"\n\n")
     print(r)
+    
+ 

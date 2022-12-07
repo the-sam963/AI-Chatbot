@@ -1,4 +1,4 @@
-# Intaligent Chatbot
+# Intaligent Assistant
 it is a very intaligent Chat bot, built with 'nltk'. In this project I use .csv file to store data. It can be use with other databases also.
 
 Here I ignored 'data' directory, becauce it contains very large files. If you want to clone  it you need to do a little task.

@@ -1,4 +1,4 @@
-from data import DataLib
+from data import DataLib, get_dataset
 import random
 import pickle
 import json
@@ -14,8 +14,7 @@ from keras.optimizers import SGD
 
 
 lemmatizer = WordNetLemmatizer()
-patterns, responses = DataLib()
-
+patterns, responses = get_dataset()
 
 words = []
 classes = []
@@ -32,7 +31,6 @@ for i in range(patterns.shape[0]):
     documents.append((word_list, tag))
     if tag not in classes:
         classes.append(tag)
-        
         
         
 words = [lemmatizer.lemmatize(word) for word in words if word not in ignore_letters]
@@ -79,7 +77,7 @@ model.add(Dense(len(train_y[0]), activation='softmax'))
 
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-history = model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=5, verbose=1)
+history = model.fit(np.array(train_x), np.array(train_y), epochs=20, batch_size=5, verbose=1)
 model.save('model/model.h5', history)
 
 print('Done')

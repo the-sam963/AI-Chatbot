@@ -1,6 +1,6 @@
 import re
 from tabnanny import verbose
-from data import DataLib
+from data import DataLib, get_dataset
 import random
 import pickle
 import numpy as np
@@ -9,7 +9,7 @@ from nltk.stem import WordNetLemmatizer
 from keras.models import load_model
 
 lemmatizer = WordNetLemmatizer()
-patterns, responses = DataLib()
+patterns, responses = get_dataset()
 
 words = pickle.load(open('model/words.pkl', 'rb'))
 classes = pickle.load(open('model/classes.pkl', 'rb'))
@@ -52,7 +52,7 @@ def bag_of_words(sentence):
 def predict_class(sentence):
     bow = bag_of_words(sentence)
     res = model.predict(np.array([bow]))[0]
-    print(res)
+    # print(res)
     ERROR_THRESHOLD = 0.25
     results = [[i,r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
     results.sort(key=lambda  x:x[1], reverse=True)
@@ -75,8 +75,8 @@ def get_response(_predicted_class, _response):
     return result
 
 predicted_class = predict_class('hi')
-res = get_response(predicted_class, responses)
-print("| Bot:", res)
+# res = get_response(predicted_class, responses)
+# print("| Bot:", res)
 
 while True:
     message = input("| You: ")
@@ -89,6 +89,7 @@ while True:
 
     else:
         predicted_class = predict_class(message)
+        
         res = get_response(predicted_class, responses)
-        print("| Bot:", res)
+        print("| Bot:", res ,"\n")
 
