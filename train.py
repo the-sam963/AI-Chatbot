@@ -67,6 +67,9 @@ train_y = list(training[:, 1])
 
 
 # Brain
+# Brain
+# Brain
+# Brain
 
 model = Sequential()
 model.add(Dense(128, input_shape=(len(train_x[0]),), activation='relu'))
